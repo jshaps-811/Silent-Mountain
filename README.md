@@ -4,6 +4,8 @@
 
 Play as a wandering Komusō monk who weaponizes his shakuhachi flute to cleanse monsters on the mountain. Blast your way through atmospheric landscapes where the sound of the shakuhachi is the only power that matters.
 
+![Komuso Monk with Shakuhachi](concept-art/monk.jpeg)
+
 ### Genre(s)
 
 Action platformer with elements of adventure. This is definitely a popular combination, but it is kept fresh by the cultural and thematic design elements.
@@ -25,6 +27,8 @@ The player is a nameless Komusō monk wandering a mountain in feudal Japan that 
 
 The visual style is retro-platformer inspired with pixelated art and Japanese-inspired thematic design elements. This is reflected in the Torii gates and temples in the background scenery and the Komusō monk character wielding a shakuhachi flute as a weapon. The enemies are also inspired by Japanese lore/mythology such as ghosts, crows (yatagarasu), and demons (oni). The audio will be lo-fi Japanese-inspired ambient music sourced from Youtube. 
 
+![Torii Gate](concept-art/torii.jpeg)
+
 
 ### Core Loops
 The core game loop is navigating platforms and defeating the enemies. The monk can utilize a short-range and long-range breath attack, which will have different properties and affect enemies differently. As the player passes through the levels to reach the top of the mountain, the enemies become stronger and the breath system needs to be managed more carefully to defeat the enemies.
@@ -38,4 +42,6 @@ The monk will have a cooldown on the shakuhachi so that attacks cannot be repeat
 There will be three kinds of enemies:
 - Ghost: does medium-range magic attacks and has a slow movement speed and low health (Introduced in Level 1)
 - Yatagarasu (crow): High movement speed and does melee attacks with its claws. Also has low/medium health (Introduced in Level 2).
+![Yatagarasu](concept-art/yatagarasu.jpeg)
 - Oni (demon): Slow movement speed, has high health, and does a large amount of damage through physical attacks with its club (Introduced in Level 3).
+![Oni](concept-art/oni.jpeg)
