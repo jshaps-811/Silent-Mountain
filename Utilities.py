@@ -2,6 +2,7 @@ from pyray import *
 from settings import *
 from enemy import *
 from player import *
+from ghost import *
 
 
 def load_level(filepath):
@@ -12,7 +13,7 @@ def load_level(filepath):
                 levelmap.append(row)
         return levelmap
 
-def parse_level(level):
+def parse_level(level, tile_rows, tile_cols):
     """
     Parses the level map, extracts all dynamic entities (coins, enemies), 
     replaces their spawn points with air, and returns the modified collision map and entity lists.
@@ -22,8 +23,8 @@ def parse_level(level):
     # Create a deep copy of the level to modify the tiles, leaving the original map intact
     new_level = [row[:] for row in level] 
     
-    for r in range(TILE_ROWS):
-        for c in range(TILE_COLS):
+    for r in range(tile_rows):
+        for c in range(tile_cols):
             x = c * TILE_SIZE
             y = r * TILE_SIZE
 
@@ -35,11 +36,11 @@ def parse_level(level):
             # elif new_level[r][c] == TILE_LAVA:
             #     new_level[r][c] = TILE_AIR
 
-            elif new_level[r][c] == TILE_ENEMY:
+            elif new_level[r][c] == TILE_GHOST:
                 # Enemy position is top-left
-                enemies.append(Enemy(x, y))
-                new_level[r][c] = TILE_AIR 
-            
+                enemies.append(Ghost(x, y))
+                new_level[r][c] = TILE_AIR
+
     return new_level, coins, enemies
 
 def update_cam(camera, player, world_width, world_height, screen_width, screen_height):
@@ -49,15 +50,15 @@ def update_cam(camera, player, world_width, world_height, screen_width, screen_h
     camera.target.y = player.y + player.height / 2
 
     min_x = screen_width / 2
-    max_x = world_width
-    
+    max_x = world_width - screen_width / 2
+
     if camera.target.x < min_x:
         camera.target.x = min_x
     if camera.target.x > max_x:
         camera.target.x = max_x
 
     min_y = screen_height / 2
-    max_y = world_height - screen_height / 2
+    max_y = world_height + screen_height / 3
     
     if camera.target.y < min_y:
         camera.target.y = min_y
@@ -68,14 +69,14 @@ def update_cam(camera, player, world_width, world_height, screen_width, screen_h
     camera.offset.y = screen_height / 2
 
             
-def draw_level(level):
+def draw_level(level, tile_rows, tile_cols):
     """Draws the solid tiles of the level map."""
-    for row in range(TILE_ROWS):
-        for col in range(TILE_COLS):
+    for row in range(tile_rows):
+        for col in range(tile_cols):
             tile_value = level[row][col]
-            if level[row][col] == TILE_LAVA:
-                draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, RED)
-            if tile_value == TILE_SOLID:
+            if tile_value == TILE_GOAL:
+                draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, WHITE)
+            elif tile_value == TILE_SOLID:
                 x = col * TILE_SIZE
                 y = row * TILE_SIZE
 

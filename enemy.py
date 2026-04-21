@@ -1,5 +1,4 @@
 from pyray import *
-from platformer import *
 from settings import *
 
 
@@ -20,7 +19,7 @@ class Enemy:
         """Returns the enemy's collision bounding box."""
         return (self.x, self.y, self.width, self.height)
 
-    def update(self, delta_time, level):
+    def update(self, delta_time, level, tile_rows, tile_cols, world_width, player):
         # 1. Apply Gravity
         if self.is_grounded:
             self.vy = 0.0
@@ -30,14 +29,15 @@ class Enemy:
         # 2. Apply Movement 
 
         # Apply X movement
-        self.x += self.vx * delta_time
-        self.handle_tile_collision(level, 'X')
-        
+        if not player.x < self.x - WINDOW_WIDTH // 2:
+            self.x += self.vx * delta_time
+            self.handle_tile_collision(level, 'X', tile_rows, tile_cols)
+
         # Apply Y movement
         self.y += self.vy * delta_time
-        self.handle_tile_collision(level, 'Y')
+        self.handle_tile_collision(level, 'Y', tile_rows, tile_cols)
 
-    def handle_tile_collision(self, level, axis):
+    def handle_tile_collision(self, level, axis, tile_rows, tile_cols):
         """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
         enemy_rect = self.get_rect()
         px, py, pw, ph = enemy_rect
@@ -49,8 +49,8 @@ class Enemy:
 
         for row in range(min_row, max_row + 1):
             for col in range(min_col, max_col + 1):
-                
-                if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
+
+                if row < 0 or row >= tile_rows or col < 0 or col >= tile_cols:
                     continue
                 
                 if level[row][col] == TILE_SOLID:
