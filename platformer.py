@@ -76,22 +76,7 @@ def main():
                     collectibles.pop(index)
                     score += 10
 
-            # Check for enemy collision (Stomp/Death/Reset)
-            # hit_type, enemy_index = player.check_enemy_collision(enemies)
-
-            # if hit_type == "STOMP":
-            #     # Stomp mechanic: Remove enemy, score, and bounce
-            #     enemies.pop(enemy_index)
-            #     score += 100
-            #     player.vy = STOMP_BOUNCE  # Player bounces up
-
-            # elif hit_type == "LETHAL":
-            #     # Death/Reset mechanic: Penalty and restart
-            #     player.reset()
-            #     score -= 50
-            #     if score < 0: score = 0
-
-            # Check for melee hits
+           # Check for melee hits
             if player.is_attacking:
                 melee_hits = player.check_melee_hit(enemies)
                 for index in sorted(melee_hits, reverse=True):

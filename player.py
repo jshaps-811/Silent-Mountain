@@ -72,7 +72,7 @@ class Player:
         self.projectiles       = []     # list[Projectile]
         self.shoot_cooldown    = 0.0    # counts down between shots
 
-    # ------------------------------------------------------------------
+
     def startup(self):
         # Textures
         self.walk_texture = load_texture("assets/monk_walk.png")
@@ -80,7 +80,6 @@ class Player:
                                    self.walk_texture.width // 5)
         self.frame = self.animation.frame(0)
 
-    # ------------------------------------------------------------------
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
         return (self.x, self.y, self.width, self.height)
@@ -94,7 +93,7 @@ class Player:
         my = self.y + (self.height - MELEE_HEIGHT) / 2
         return (mx, my, MELEE_RANGE, MELEE_HEIGHT)
 
-    # ------------------------------------------------------------------
+    
     def update(self, delta_time, level, tile_rows, tile_cols, world_width):
 
         # ── Cooldown timers ──────────────────────────────────────────
@@ -170,7 +169,6 @@ class Player:
             self.animation.update(delta_time)
             self.frame = self.animation.frame(0)
 
-    # ------------------------------------------------------------------
     def handle_tile_collision(self, level, axis, tile_rows, tile_cols):
         """Performs AABB collision checks against solid tiles and resolves."""
         player_rect = self.get_rect()
@@ -215,7 +213,6 @@ class Player:
                         player_rect = self.get_rect()
                         px, py, pw, ph = player_rect
 
-    # ------------------------------------------------------------------
     def check_collection(self, collectibles):
         """Checks for collision with coins; returns indices of collected ones."""
         collected_indices = []
@@ -231,7 +228,6 @@ class Player:
                 
         return collected_indices
 
-    # ------------------------------------------------------------------
     def check_enemy_collision(self, enemies):
         """Checks player body vs enemies (stomp or lethal).
         Returns (hit_type, enemy_index) or (None, -1).
@@ -278,7 +274,6 @@ class Player:
                     break   # one enemy per projectile
         return hits
 
-    # ------------------------------------------------------------------
     def reset(self):
         """Resets the player to their starting position."""
         self.x = self.start_x
@@ -290,7 +285,6 @@ class Player:
         self.attack_timer = 0.0
         self.projectiles.clear()
 
-    # ------------------------------------------------------------------
     def draw(self):
         """Draws projectiles, the player sprite, and (optionally) debug rects."""
 
