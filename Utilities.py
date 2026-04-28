@@ -3,6 +3,7 @@ from settings import *
 from enemy import *
 from player import *
 from ghost import *
+from yatagarasu import *
 
 
 def load_level(filepath):
@@ -28,17 +29,19 @@ def parse_level(level, tile_rows, tile_cols):
             x = c * TILE_SIZE
             y = r * TILE_SIZE
 
-            if new_level[r][c] == TILE_COIN:
+            if new_level[r][c] == TILE_GOAL:
                 # Coin position is center
                 coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
                 new_level[r][c] = TILE_AIR 
-            
-            # elif new_level[r][c] == TILE_LAVA:
-            #     new_level[r][c] = TILE_AIR
 
             elif new_level[r][c] == TILE_GHOST:
                 # Enemy position is top-left
                 enemies.append(Ghost(x, y))
+                new_level[r][c] = TILE_AIR
+
+            elif new_level[r][c] == TILE_YATAGARASU:
+                # Enemy position is top-left
+                enemies.append(Yatagarasu(x, y))
                 new_level[r][c] = TILE_AIR
 
     return new_level, coins, enemies
@@ -58,7 +61,7 @@ def update_cam(camera, player, world_width, world_height, screen_width, screen_h
         camera.target.x = max_x
 
     min_y = screen_height / 2
-    max_y = world_height + screen_height / 3
+    max_y = world_height - screen_height / 2
     
     if camera.target.y < min_y:
         camera.target.y = min_y
@@ -68,21 +71,44 @@ def update_cam(camera, player, world_width, world_height, screen_width, screen_h
     camera.offset.x = screen_width / 2
     camera.offset.y = screen_height / 2
 
-            
-def draw_level(level, tile_rows, tile_cols):
+
+def draw_level(level, tile_rows, tile_cols, tiles):
     """Draws the solid tiles of the level map."""
     for row in range(tile_rows):
         for col in range(tile_cols):
             tile_value = level[row][col]
             if tile_value == TILE_GOAL:
                 draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, WHITE)
-            elif tile_value == TILE_SOLID:
+            elif tile_value == TILE_BOTTOM_GRASS:
                 x = col * TILE_SIZE
                 y = row * TILE_SIZE
 
-                draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
-                draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
-                
+                # draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
+                # draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+                draw_texture_pro(
+                    tiles[1],
+                    Rectangle(0, 0, tiles[1].width, tiles[1].height),
+                    Rectangle(x, y, TILE_SIZE, TILE_SIZE),
+                    Vector2(0, 0),
+                    0.0,
+                    WHITE
+                )
+            
+            elif tile_value == TILE_TOP_GRASS:
+                x = col * TILE_SIZE
+                y = row * TILE_SIZE
+
+                # draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
+                # draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+                draw_texture_pro(
+                    tiles[0],
+                    Rectangle(0, 0, tiles[0].width, tiles[0].height),
+                    Rectangle(x, y, TILE_SIZE, TILE_SIZE),
+                    Vector2(0, 0),
+                    0.0,
+                    WHITE
+                )
+
 def draw_coins(coins):
         """Draws the active coins as small yellow diamonds (polygons)."""
         radius = TILE_SIZE * 0.3 / 2 

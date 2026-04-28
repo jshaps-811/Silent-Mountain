@@ -29,7 +29,7 @@ class Projectile:
         col = int(self.x / TILE_SIZE)
         row = int(self.y / TILE_SIZE)
         if 0 <= row < tile_rows and 0 <= col < tile_cols:
-            if level[row][col] == TILE_SOLID:
+            if level[row][col] == TILE_TOP_GRASS or level[row][col] == TILE_BOTTOM_GRASS:
                 self.alive = False
 
     def get_rect(self):
@@ -72,6 +72,11 @@ class Player:
         self.projectiles       = []     # list[Projectile]
         self.shoot_cooldown    = 0.0    # counts down between shots
 
+        # --- Health ---
+        self.health = BASE_HEALTH
+
+        # --- Level ---
+        self.level = 1
 
     def startup(self):
         # Textures
@@ -186,10 +191,14 @@ class Player:
                     continue
 
                 if level[row][col] == TILE_GOAL:
-                    self.reset()
-                    break
-                
-                if level[row][col] == TILE_SOLID:
+                    tile_rect = (col * TILE_SIZE, row * TILE_SIZE,
+                                 TILE_SIZE, TILE_SIZE)
+                    if check_collision_recs(player_rect, tile_rect):
+                        self.level += 1
+                        self.reset()
+                        break
+
+                if level[row][col] == TILE_TOP_GRASS or level[row][col] == TILE_BOTTOM_GRASS:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE,
                                  TILE_SIZE, TILE_SIZE)
                     
@@ -310,7 +319,7 @@ class Player:
 
         draw_texture_pro(self.walk_texture, src_frame, dest_rect, origin, 0, WHITE)
 
-        # ── Melee hitbox flash ────────────────────────────────────────
+        # --- Melee hitbox flash 
         if self.is_attacking:
             mx, my, mw, mh = self.get_melee_rect()
             # Bright slash indicator that fades with the remaining duration

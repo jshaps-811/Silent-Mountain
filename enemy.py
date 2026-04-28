@@ -9,6 +9,9 @@ class Enemy:
         self.y = y
         self.width = TILE_SIZE * 0.7
         self.height = TILE_SIZE * 0.7
+
+        self.start_x = x
+        self.start_y = y
         
         # Physics/Movement
         self.vx = ENEMY_SPEED # Start moving right
@@ -33,6 +36,12 @@ class Enemy:
             self.x += self.vx * delta_time
             self.handle_tile_collision(level, 'X', tile_rows, tile_cols)
 
+        if abs(self.x - self.start_x) > ENEMY_XRANGE:
+            self.vx *= -1
+        
+        if abs(self.y - self.start_y) > ENEMY_YRANGE:
+            self.vy *= -1
+
         # Apply Y movement
         self.y += self.vy * delta_time
         self.handle_tile_collision(level, 'Y', tile_rows, tile_cols)
@@ -52,8 +61,8 @@ class Enemy:
 
                 if row < 0 or row >= tile_rows or col < 0 or col >= tile_cols:
                     continue
-                
-                if level[row][col] == TILE_SOLID:
+
+                if level[row][col] == TILE_TOP_GRASS or level[row][col] == TILE_BOTTOM_GRASS:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(enemy_rect, tile_rect):
