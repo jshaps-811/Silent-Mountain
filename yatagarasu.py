@@ -4,6 +4,8 @@ from settings import *
 from enemy import *
 import random
 import math
+import os
+from anim import *
 
 
 class Yatagarasu(Enemy):
@@ -22,7 +24,12 @@ class Yatagarasu(Enemy):
         self.attack_timer      = 0.0    # counts down active duration
         self.attack_cooldown   = 0.0    # counts down between attacks
 
-        self.facing = 1  # 1 for right, -1 for left
+        base_dir =  os.path.dirname(__file__)
+        self.texture = load_texture(os.path.join(base_dir, "assets", "yatagarasu.png"))
+        self.animation = Animation(1, 4, 1, 1, 0.2, 0.2, 1, 0, 4, self.texture.width // 4)
+        self.frame = self.animation.frame(0, 50)
+
+        self.attack_sound = load_sound("assets/audio/slice.mp3")
 
     def get_melee_rect(self):
         """Returns the melee hitbox rect in front of the player."""
@@ -31,8 +38,8 @@ class Yatagarasu(Enemy):
         else:
             mx = self.x - MELEE_RANGE         # left side
         my = self.y + (self.height - MELEE_HEIGHT) / 2
-        return (mx, my, MELEE_RANGE, MELEE_HEIGHT)
-    
+        return (mx, my, MELEE_WIDTH, MELEE_HEIGHT)
+
     def check_melee_hit(self, player):
         """Returns indices of enemies hit by the active melee hitbox.
         Call only when self.is_attacking is True.
@@ -55,7 +62,7 @@ class Yatagarasu(Enemy):
         self.x += self.vx * delta_time
         
         # Reverse direction occasionally
-        if random.random() < 0.005:
+        if random.random() < 0.005 or self.x < self.start_x - ENEMY_XRANGE or self.x > self.start_x + ENEMY_XRANGE:
             self.vx *= -1
             self.facing *= -1
 
@@ -63,7 +70,7 @@ class Yatagarasu(Enemy):
         if self.attack_cooldown > 0:
             self.attack_cooldown -= delta_time
 
-        # Attack Logic, similar to Player
+        # Attack Logic
         self.attack_timer -= delta_time
         if self.attack_timer <= 0:
                 self.is_attacking = False
@@ -71,25 +78,24 @@ class Yatagarasu(Enemy):
         if abs(self.x - player.x) < ATT_THRESHOLD and abs(self.y - player.y) < ATT_THRESHOLD:
             if not self.is_attacking and self.attack_cooldown <= 0:
                 self.is_attacking    = True
+                play_sound(self.attack_sound)
                 self.attack_timer    = MELEE_DURATION
                 self.attack_cooldown = MELEE_COOLDOWN
-
-        if self.check_melee_hit(player):
-            player.health -= 25
-            self.is_attacking = False
-
+        
+        self.animation.update(delta_time)
+        self.frame = self.animation.frame(0, 0)
 
     def draw(self):
-        # Draw yatagarasu body
-        draw_rectangle(int(self.x), int(self.y), int(self.width), int(self.height), BLACK)
-        draw_rectangle_lines(int(self.x), int(self.y), int(self.width), int(self.height), WHITE)
+        # draw_rectangle(int(self.x), int(self.y), int(self.width), int(self.height), BLACK)
+        # draw_rectangle_lines(int(self.x), int(self.y), int(self.width), int(self.height), WHITE)
 
-        if self.attack_timer > 0:
-            mx, my, mw, mh = self.get_melee_rect()
-            # Bright slash indicator that fades with the remaining duration
-            alpha = int(200 * (self.attack_timer / MELEE_DURATION))
-            draw_rectangle(int(mx), int(my), int(mw), int(mh),
-                           Color(255, 220, 80, alpha))
-            draw_rectangle_lines(int(mx), int(my), int(mw), int(mh),
-                                 Color(255, 255, 180, min(alpha + 55, 255)))
+        dest = self.get_rect()
+        src = Rectangle(
+            self.frame.x,
+            self.frame.y,
+            self.frame.width * -self.facing,
+            self.frame.height
+        )
+        draw_texture_pro(self.texture, src, dest, Vector2(0, 0), 0.0, WHITE)
+
 

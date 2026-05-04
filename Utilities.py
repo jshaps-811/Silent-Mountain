@@ -4,13 +4,14 @@ from enemy import *
 from player import *
 from ghost import *
 from yatagarasu import *
+from oni import *
 
 
 def load_level(filepath):
         levelmap = []
         with open(filepath, 'r') as f:
             for line in f:
-                row = [int(cell) for cell in line.strip().split(',')]
+                row = [int(cell) if cell.strip() else 0 for cell in line.strip().split(',')]
                 levelmap.append(row)
         return levelmap
 
@@ -30,18 +31,18 @@ def parse_level(level, tile_rows, tile_cols):
             y = r * TILE_SIZE
 
             if new_level[r][c] == TILE_GOAL:
-                # Coin position is center
-                coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
-                new_level[r][c] = TILE_AIR 
+                pass
 
             elif new_level[r][c] == TILE_GHOST:
-                # Enemy position is top-left
                 enemies.append(Ghost(x, y))
                 new_level[r][c] = TILE_AIR
 
             elif new_level[r][c] == TILE_YATAGARASU:
-                # Enemy position is top-left
                 enemies.append(Yatagarasu(x, y))
+                new_level[r][c] = TILE_AIR
+
+            elif new_level[r][c] == TILE_ONI:
+                enemies.append(Oni(x, y))
                 new_level[r][c] = TILE_AIR
 
     return new_level, coins, enemies
@@ -53,15 +54,18 @@ def update_cam(camera, player, world_width, world_height, screen_width, screen_h
     camera.target.y = player.y + player.height / 2
 
     min_x = screen_width / 2
-    max_x = world_width - screen_width / 2
+    if player.level == 3:
+        max_x = world_width // 3
+    else:
+        max_x = world_width - screen_width / 2
 
     if camera.target.x < min_x:
         camera.target.x = min_x
     if camera.target.x > max_x:
         camera.target.x = max_x
 
-    min_y = screen_height / 2
-    max_y = world_height - screen_height / 2
+    min_y = screen_height / 2 
+    max_y = world_height - screen_height // 2
     
     if camera.target.y < min_y:
         camera.target.y = min_y
@@ -77,32 +81,17 @@ def draw_level(level, tile_rows, tile_cols, tiles):
     for row in range(tile_rows):
         for col in range(tile_cols):
             tile_value = level[row][col]
+            x = col * TILE_SIZE
+            y = row * TILE_SIZE
+
             if tile_value == TILE_GOAL:
                 draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, WHITE)
-            elif tile_value == TILE_BOTTOM_GRASS:
-                x = col * TILE_SIZE
-                y = row * TILE_SIZE
 
-                # draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
-                # draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+            elif tile_value in tiles:
+                tex = tiles[tile_value]
                 draw_texture_pro(
-                    tiles[1],
-                    Rectangle(0, 0, tiles[1].width, tiles[1].height),
-                    Rectangle(x, y, TILE_SIZE, TILE_SIZE),
-                    Vector2(0, 0),
-                    0.0,
-                    WHITE
-                )
-            
-            elif tile_value == TILE_TOP_GRASS:
-                x = col * TILE_SIZE
-                y = row * TILE_SIZE
-
-                # draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
-                # draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
-                draw_texture_pro(
-                    tiles[0],
-                    Rectangle(0, 0, tiles[0].width, tiles[0].height),
+                    tex,
+                    Rectangle(0, 0, tex.width, tex.height),
                     Rectangle(x, y, TILE_SIZE, TILE_SIZE),
                     Vector2(0, 0),
                     0.0,

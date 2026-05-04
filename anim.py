@@ -41,13 +41,17 @@ class Animation:
                     case AnimationType.REPEATING:
                         self.cur = self.first 
 
-    def frame(self, row):  # FIXES happened there to generalize to sprite sheet
+    
+    def frame(self, row, y_offset):  
         x = (self.cur % self.sprites_in_row) * self.tilesize
-        y =  self.tilesize * self.row
+        y =  self.tilesize * row + y_offset
 
         return Rectangle(x, y, self.tilesize, self.tilesize)
 
-    def reset(self): # ADDED
+    def reset(self, anim_type=None):
         self.cur = self.first
+        self.duration_left = self.duration
         self.done = False
-        self.type = AnimationType.ONESHOT
+
+        if anim_type is not None:
+            self.type = anim_type

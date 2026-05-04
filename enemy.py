@@ -4,14 +4,15 @@ from settings import *
 
 class Enemy:
     def __init__(self, x, y):
-        # Position (top-left for collision)
+
         self.x = x
         self.y = y
-        self.width = TILE_SIZE * 0.7
-        self.height = TILE_SIZE * 0.7
+        self.width = TILE_SIZE * 1.75
+        self.height = TILE_SIZE * 1.75
 
         self.start_x = x
         self.start_y = y
+        self.facing = -1
         
         # Physics/Movement
         self.vx = ENEMY_SPEED # Start moving right
@@ -22,14 +23,16 @@ class Enemy:
         """Returns the enemy's collision bounding box."""
         return (self.x, self.y, self.width, self.height)
 
+    def get_hitbox_rect(self):
+        """Returns the enemy's hitbox rectangle."""
+        return (self.x + self.width // 4, self.y + self.height // 4, self.width // 2, self.height // 2)
+
     def update(self, delta_time, level, tile_rows, tile_cols, world_width, player):
         # 1. Apply Gravity
         if self.is_grounded:
             self.vy = 0.0
         self.vy += GRAVITY * delta_time
         self.is_grounded = False 
-
-        # 2. Apply Movement 
 
         # Apply X movement
         if not player.x < self.x - WINDOW_WIDTH // 2:
@@ -62,7 +65,7 @@ class Enemy:
                 if row < 0 or row >= tile_rows or col < 0 or col >= tile_cols:
                     continue
 
-                if level[row][col] == TILE_TOP_GRASS or level[row][col] == TILE_BOTTOM_GRASS:
+                if level[row][col] == TILE_TOP_GRASS or level[row][col] == TILE_BOTTOM_GRASS or level[row][col] == INVISIBLE:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(enemy_rect, tile_rect):
@@ -82,7 +85,7 @@ class Enemy:
                                 
                             self.vy = 0.0 
                             
-                        enemy_rect = self.get_rect() # Update rect after resolution
+                        enemy_rect = self.get_rect()
 
     def draw(self):
         """Draws the enemy as a red rectangle with a directional indicator."""
@@ -102,3 +105,4 @@ class Enemy:
             draw_triangle(Vector2(center_x - indicator_size, center_y), 
                          Vector2(center_x + indicator_size, center_y - indicator_size), 
                          Vector2(center_x + indicator_size, center_y + indicator_size), WHITE)
+
