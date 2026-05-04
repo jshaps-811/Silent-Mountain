@@ -57,7 +57,7 @@ The monk can freely run and jump around the map. In addition, using the shakuhac
 | Whirlwind | Close-up attack that consumes 25% of the breath meter. One-shots weak enemies and is strong against the Oni |
 | Flute Blast | Long-range attack that consumes 40% of breath meter. One-shots weak enemies but is very weak against the Oni. Has a small hitbox, making it more challenging to land, so that ranged attacks cannot be abused |
 
-The monk will have a cooldown on the shakuhachi so that attacks cannot be repeatedly launched. Each attack will use a certain amount of breath, which regenerates slowly over time, so the player has to manage their ammo (breath) while navigating the platforms and defeating the monsters.
+The monk will have a cooldown on the shakuhachi so that attacks cannot be repeatedly launched. Each attack will use a certain amount of breath, which regenerates at a rate of 12.5% per second, so the player has to manage their ammo (breath) while navigating the platforms and defeating the monsters.
 
 | Enemies | Image | 
 | :--- | :---
