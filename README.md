@@ -4,6 +4,10 @@ Jordan Shapiro
 
 ![Statement Image](concept-art/screenshot_1.png)
 
+### Link to Game Footage
+
+https://drive.google.com/file/d/1wd1qvFrJfiLSLYIp5LEnNT8ZY5IBNMkm/view?usp=sharing
+
 ### Concept statement
 
 | The Premise | |
@@ -27,7 +31,7 @@ The thematic elements and the incorporation of Japanese culture set this game ap
 
 ### Player Experience and Game POV
 
-The player is a nameless Komusō monk wandering a mountain in feudal Japan that has fallen into silence. Armed with only a shakuhachi flute whose breath-powered blasts and sustained tones cleanse enemies back into harmony. Emotionally, the game brings the player through focused platform traversal and high-tension fights against monsters. Ultimately, players must push forward to reach the top of the mountain, driving excitement and difficulty as the game progresses.
+The player is a nameless Komusō monk wandering a mountain in feudal Japan. Armed with only a shakuhachi flute whose breath-powered blasts and sustained tones cleanse enemies back into harmony. Emotionally, the game brings the player through focused platform traversal and high-tension fights against monsters. Ultimately, players must push forward to reach the top of the mountain, driving excitement and difficulty as the game progresses.
 
 ### Core Loops
 The core game loop is navigating platforms and defeating the enemies. The monk can utilize a short-range and long-range breath attack, which will have different properties and affect enemies differently. As the player passes through the levels to reach the top of the mountain, the enemies become stronger and the breath system needs to be managed more carefully to defeat the enemies.
